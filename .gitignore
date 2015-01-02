@@ -1,0 +1,9 @@
+html/
+*_files/
+.R*
+power_alpha/
+power_effect/
+power_sd/
+power_N/
+regression_outliers/
+sampling_distribution/
