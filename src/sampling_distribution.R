@@ -1,15 +1,11 @@
+sampling_distribution <- function(samps = 10, n = 50, rate = .03) { 
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
-library(animation)
-library(ggplot2)
-library(gridExtra)
-library(dplyr)
-
-saveHTML({ 
-  samps = 10
-  n = 50     # sample size
-  rate = .03 
-  mu = 1/rate
-  sigma = 1/rate
+  library(dplyr)
+  library(ggplot2)
+  oopt = ani.options(interval = .25, nmax = samps)
+  
+  mu <- 1/rate
+  sigma <- 1/rate
   #draw samples from exp
   samples <- as.data.frame(replicate(samps,rexp(n, rate)))
   # calculate sample means
@@ -21,22 +17,24 @@ saveHTML({
   ymax_freq <- max(dummy$density)
 
   ## use a loop to create images one by one
-  oopt = ani.options(interval = .25, nmax = samps, ani.width = 800, ani.height=500)
+
   for (N in 2:ani.options("nmax")) {
-      p1 <- ggplot(select(samples, N),aes_string(x = paste('V',N,sep=''))) + 
-        geom_histogram(aes(y=..density..),fill="white",color="red",binwidth=5) + 
-        stat_function(fun = dexp, args = list(rate=rate),size = 1.5) + 
-        scale_y_continuous(limits=c(0,.045)) + scale_x_continuous(limits=c(0,max(samples))) + 
-        ggtitle("Sample Distribution") +  xlab(paste("Sample #", N,sep='')) + theme_bw()
-      
-      p2 <- ggplot(data = data.frame(avg=means$avg[1:N]), aes(x=avg)) +
-        geom_histogram(binwidth=.5,fill="#999999") + 
-        geom_text(aes(label = paste("Number of means = ", as.character(N)), 
-                      x=mu,y=ymax_counts+2.5), size = 8, color = "red") +
-        scale_y_continuous(limits=c(0,ymax_counts+5)) + 
-        scale_x_continuous("Sample Mean Value",limits=c(min(means$avg)-3,max(means$avg)+3)) +
-        ggtitle("Distibution of Means from All Samples") + 
-        theme_bw()
+    p1 <- ggplot(select(samples, N),aes_string(x = paste('V',N,sep=''))) + 
+      geom_histogram(aes(y=..density..),fill="white",color="red",binwidth=5) + 
+      stat_function(fun = dexp, args = list(rate=rate),size = 1.5) + 
+      scale_y_continuous(limits=c(0,.045)) + scale_x_continuous(limits=c(0,max(samples))) +
+      ggtitle("Sample Distribution") +  xlab(paste("Sample #", N,sep='')) + theme_bw()
+    
+    p2 <- ggplot(data = data.frame(avg=means$avg[1:N]),mapping=aes(x=avg)) +
+      geom_histogram(binwidth=.5,fill="#999999") + 
+      geom_text(mapping = aes(label = paste("Number of means = ", as.character(N)),
+                              x= mu ,y=ymax_counts + 2.5), 
+                data = data.frame(mu = mu, ymax_counts = ymax_counts,N = N ),
+                size = 8, color = "red") +
+      scale_y_continuous(limits=c(0,ymax_counts+5))  +
+      scale_x_continuous("Sample Mean Value",limits=c(min(means$avg)-3,max(means$avg)+3)) +
+      ggtitle("Distibution of Means from All Samples") + 
+      theme_bw()
       
       # figure out x axis location of newest point!
       new_data <- ggplot_build(p2)$data[[1]]
@@ -63,20 +61,19 @@ saveHTML({
     geom_histogram(aes(x=avg,y = ..density..),binwidth=.5,fill="#999999") + 
     stat_function(fun=dnorm, args = list(mean=mu,sd=sigma/sqrt(n)), size = 2, color='red') + 
     geom_text(aes(label = paste("Number of means = ", as.character(N)), 
-                  x=mu,y=ymax_freq+.0075), size = 8, color = "red") +
+                  x=mu,y=ymax_freq+.0075), 
+              data = data.frame(mu = mu, ymax_freq=ymax_freq,N = N ),
+              size = 8, color = "red") +
     geom_line(data = d_est, mapping = aes(x=x,y=y),
               color="darkgreen",size =1.5,linetype = 2 ) + 
     scale_y_continuous(limits=c(0,ymax_freq+.01)) + 
     scale_x_continuous("Sample Mean Value",limits=c(min(means$avg)-3,max(means$avg)+3)) +
     ggtitle("Distibution of Means from All Samples") + 
     theme_bw()
-  p3
+  print(p3)
 
   
-}, img.name = "exp_sampling_dist", imgdir = "img", htmlfile = "sampling_dist.html", 
- title = "Distribution of the Sample Mean from Exponential Distribution", 
-description = "Sampling distribution becomes normally distributed: The Central Limit Theorem",
-verbose=F, autobrowse = F,autoplay =F)
+}
 
 #   out2 <- hist(samples$avg, breaks = 50, 
 #               xlim = c(mu-3*sigma/sqrt(n),mu + 3*sigma/sqrt(n)),

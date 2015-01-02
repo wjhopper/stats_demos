@@ -4,9 +4,9 @@ output:
   html_document:
     theme: cerulean
     self_contained: false
-    css: custom.css
+    css: ../css/custom.css
     includes:
-      in_header: sci-includes.html
+      in_header: ../html_includes/sci-includes.html
 ---
 
 ```{r load_stuff,include=FALSE}
