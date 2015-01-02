@@ -2,6 +2,8 @@ sampling_distribution <- function(samps = 10, n = 50, rate = .03) {
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
   library(dplyr)
   library(ggplot2)
+  library(gridExtra)
+  library(animation)
   oopt = ani.options(interval = .25, nmax = samps)
   
   mu <- 1/rate
