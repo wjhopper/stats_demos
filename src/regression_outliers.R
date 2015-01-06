@@ -1,5 +1,6 @@
 regression_outliers <- function(n = 51, mu = 100, sigma = 15, interval = 2.5, frames =20) { 
-
+  library(ggplot2)
+  library(gridExtra)
   ani.options(interval = interval, nmax = frames)
 
   #1 The effect of an outlier on the regression line when the outlier is far from the mean.
