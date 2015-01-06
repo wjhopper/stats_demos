@@ -28,7 +28,7 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
       library(rmarkdown)
       start_dir = getwd()
       if (file.exists(html_dir)) {
-        file.remove(html_dir)
+        unlink(html_dir, recursive=TRUE)
       }
       dir.create(html_dir)
       rmd_files <- sub('.R','.Rmd', files)

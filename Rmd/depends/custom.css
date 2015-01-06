@@ -2,6 +2,10 @@
   display: inline !important;
 }
 
+#header { 
+  padding-top: 35px;
+}
+
 #header h1 {
   text-align: center;
 }
