@@ -2,6 +2,7 @@
 title: "Statistics Demonstrations"
 output:
   html_document:
+    theme: united
     css: assets/demos.css  
     self_contained: true
 ---

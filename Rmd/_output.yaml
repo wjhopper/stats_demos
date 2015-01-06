@@ -1,0 +1,7 @@
+html_document:
+  fig_width: 14
+  fig_height: 10
+  lib_dir: ../html_output/assets	
+  theme: cerulean
+  self_contained: false
+  css: assets/custom.css
