@@ -1,0 +1,25 @@
+---
+title: "Statistics Demonstrations"
+output:
+  html_document:
+    css: assets/demos.css
+---
+***
+
+```{r load_stuff, verbose=F,warning=FALSE,message=FALSE,echo=FALSE}
+  library(pander)
+  table <- data.frame(title = c("Power and Alpha Level", "Power and Effect Size", "Power and Sample Size",
+                              "Power and Sample Standard Deviation", "Regression and Outliers",
+                              "Sampling Distributions"),
+                      file = c("power_alpha", "power_effect", "power_n", "power_sd", "regression_outliers",
+                              "sampling_distribution"))
+  files <- list.files(path = file.path("..","html_output"),pattern="*.html")
+  files <- sub('.html', '', files)
+  titles <- table[table$file == files,'title']
+```
+
+```{r generate_titles, verbose=F,warning=FALSE,message=FALSE,echo=FALSE, results='asis'}
+  for (i in 1:length(titles)) { 
+    pandoc.header(pandoc.link.return(url =paste(files[i],'.html',sep=''),text = titles[i]),level=2)
+  }
+```

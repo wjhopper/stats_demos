@@ -1,0 +1,24 @@
+---
+title: "The effect the alpha level on power"
+output:
+  html_document:
+    lib_dir: ../html_output/assets  
+    theme: cerulean
+    self_contained: false
+    css: assets/custom.css
+    includes:
+      in_header: depends/sci-includes.html
+---
+
+```{r load_stuff,include=FALSE}
+  library(knitr)
+  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE)
+  opts_knit$set(animation.fun=hook_scianimator)
+  source(file.path('..','src','power_alpha.R'))  
+```
+
+```{r plot_sampling_animation,fig.show='animate', fig.width=14, fig.height=10, interval=.15, aniopts=('controls')}
+# fig.width=10, fig.height=6,  
+# ani.width = 800, ani.height=500
+  power_alpha()
+```
