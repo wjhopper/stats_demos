@@ -25,6 +25,18 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
       setwd(start_dir)
     }
   } else {
-    # knit things!
+      library(rmarkdown)
+      start_dir = getwd()
+      dir.create(html_dir, mode = "0775")
+      rmd_files <- sub('.R','.Rmd', files)
+      rmd_files <- sub('src','Rmd',rmd_files)
+      
+      for (i in rmd_files) {
+        render(i,output_dir = file.path('..',html_dir))
+      }
+      setwd(start_dir)
+      file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
+      file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      
+      render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),intermediates_dir = file.path('..',html_dir) )
   }
 }
