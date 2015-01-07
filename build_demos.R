@@ -1,6 +1,11 @@
 build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
-
+  
   files <- list.files(path = "src",pattern="*.R",full.names=TRUE)
+  if (identical(files, character(0))) {
+    stop("No animation functions found. Perhaps you are in the wrong directory?
+  Change to the directory containing the 'src' directory and try again.")
+  }
+  
   if (docs != "all") {
     files = files[sub('.R', '', basename(files)) == docs]
   }
@@ -21,7 +26,7 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
       saveHTML({fun_list[[i]]$value()}, img.name = bnames[i], 
                imgdir =  "img",  htmlfile = paste(bnames[i],".html", sep=''),
                autobrowse = FALSE, verbose=FALSE, autoplay =FALSE, navigator = FALSE,
-               title = bnames[i],ani.width = 1000, ani.height=800)
+               title = bnames[i],ani.width = 900, ani.height=500)
       setwd(start_dir)
     }
   } else {
