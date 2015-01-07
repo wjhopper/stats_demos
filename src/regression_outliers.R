@@ -1,4 +1,4 @@
-regression_outliers <- function(n = 50, mu = 100, sigma = 15, interval = 2.5, frames =20) { 
+regression_outliers <- function(n = 50, mu = 100, sigma = 15, interval = .05, frames =20) { 
   library(ggplot2)
   library(gridExtra)
   ani.options(interval = interval, nmax = frames + 1)
@@ -18,11 +18,7 @@ regression_outliers <- function(n = 50, mu = 100, sigma = 15, interval = 2.5, fr
 
   # find the closest point to the mean of x
   middle_x_pos <- which.min(abs(x-mean(x)))
-  # Get some good lims
-  min_ylim <- min(y) -5
-  max_ylim <- max(y) + ani.options("nmax")
-  min_xlim <- min(x) - 5
-  max_xlim <- max(x)+ 5
+
 
   df <- data.frame(xv = x, yv = y)  
   # copy this df for modification later 
@@ -30,6 +26,12 @@ regression_outliers <- function(n = 50, mu = 100, sigma = 15, interval = 2.5, fr
   m_df <- df
 
   lm.normal <- lm(yv~xv,data=df)
+
+  # Get some good lims
+  min_ylim <- min(y) - (ani.options("nmax") - (abs((min(y) - y[middle_x_pos]))))
+  max_ylim <- max(y) + ani.options("nmax")
+  min_xlim <- min(x) - 5
+  max_xlim <- max(x)+ 5
 
   for (residual in seq(offset-1,offset-1+frames)) {
 
