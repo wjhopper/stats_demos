@@ -1,4 +1,4 @@
-sampling_distribution <- function(samps = 10, n = 50, rate = .03) { 
+sampling_distribution <- function(samps = 1000, n = 50, rate = .03) { 
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
   library(dplyr)
   library(ggplot2)
@@ -13,7 +13,7 @@ sampling_distribution <- function(samps = 10, n = 50, rate = .03) {
   # calculate sample means
   means <- data.frame(avg=colMeans(samples))
   
-  # dummy plots to get best ymax for animations 
+  # dummy plots just to get best looking max ylims before drawing the animations 
   dummy <-  hist(means$avg, breaks = 50,  plot=F)
   ymax_counts <- max(dummy$counts)
   ymax_freq <- max(dummy$density)
@@ -29,7 +29,7 @@ sampling_distribution <- function(samps = 10, n = 50, rate = .03) {
     
     p2 <- ggplot(data = data.frame(avg=means$avg[1:N]),mapping=aes(x=avg)) +
       geom_histogram(binwidth=.5,fill="#999999") + 
-      geom_text(mapping = aes(label = paste("Number of means = ", as.character(N)),
+      geom_text(mapping = aes(label = paste("Number of samples drawn = ", as.character(N)),
                               x= mu ,y=ymax_counts + 2.5), 
                 data = data.frame(mu = mu, ymax_counts = ymax_counts,N = N ),
                 size = 8, color = "red") +
@@ -40,7 +40,7 @@ sampling_distribution <- function(samps = 10, n = 50, rate = .03) {
       
       # figure out x axis location of newest point!
       new_data <- ggplot_build(p2)$data[[1]]
-      if (N >3) {
+      if (N >2) {
         new_item_loc <- new_data$count != old_data$count 
         x_loc <- new_data[new_item_loc,'x']
         y_loc <- new_data[new_item_loc,'y']
