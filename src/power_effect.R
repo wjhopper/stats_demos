@@ -53,7 +53,7 @@ power_effect <- function(meanh0 = 100,  effect = 3, sdh0 = 15, N =15, interval=2
                 mapping = aes(label = "H[0]", x=x, y=y), parse=TRUE, size = 8) + 
       geom_text(data=data.frame( x = meanh1, y = max(df$yv_alt)+.01),
                 mapping = aes(label = "H[1]", x=x, y=y), parse=TRUE, size = 8) + 
-      scale_x_continuous("Numeric Dependent Variable Values") + 
+      scale_x_continuous("Numeric Dependent Variable Values", limits = c(80,120)) + 
       scale_y_continuous("Normal Distribution") +
       ggtitle("Power as a function of effect size") + theme_bw() +
       theme(plot.title = element_text(size=18),
