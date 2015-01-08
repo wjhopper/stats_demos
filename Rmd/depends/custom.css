@@ -1,15 +1,12 @@
-#plot_sampling_animation-speed label, div#plot_sampling_animation {
+.speed label {
   display: inline !important;
 }
 
 #header { 
-  padding-top: 35px;
+  padding-top: 5px;
 }
 
 #header h1 {
   text-align: center;
 }
 
-body .main-container { 
-  max-width: 100%;
-}

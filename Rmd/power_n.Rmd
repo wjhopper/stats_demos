@@ -13,7 +13,7 @@ output:
   source(file.path('..','src','power_n.R'))  
 ```
 
-```{r plot_sampling_animation,fig.show='animate', aniopts=('controls')}
+```{r animation,fig.show='animate', aniopts=('controls')}
 # fig.width=10, fig.height=6,  
 # ani.width = 800, ani.height=500
   power_n()
