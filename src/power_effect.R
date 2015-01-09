@@ -1,7 +1,5 @@
 power_effect <- function(meanh0 = 100,  effect = 3, sdh0 = 15, N =15, interval=2.5, frames = 15){ 
   
-  library(ggplot2)
-  library(animation)
   # POWER INCREASES AS THE EFFECT SIZE, THE DIFFERENCE BETWEEN THE NULL HYPOTHESIS MEAN AND THE TRUE MEAN,  INCREASES
 
   oopt =  ani.options()
@@ -26,8 +24,8 @@ power_effect <- function(meanh0 = 100,  effect = 3, sdh0 = 15, N =15, interval=2
     
     
     p1 <- ggplot(data =df, aes(x=xv)) + 
-      geom_line(aes(y=yv_null),size=1) +
-      geom_line(aes(y=yv_alt),size=1) +
+      geom_line(aes(y=yv_null)) +
+      geom_line(aes(y=yv_alt)) +
       # Beta 
       geom_polygon(data = data.frame(x = c(min(df$xv), df[df$xv <= cutoff,'xv'], cutoff),
                                      y = c(0, df[df$xv <= cutoff,'yv_alt'], 0)),
@@ -42,22 +40,25 @@ power_effect <- function(meanh0 = 100,  effect = 3, sdh0 = 15, N =15, interval=2
                    aes(x=x,y=y), fill='red',color='black',alpha=.6) + 
       geom_text(data=data.frame( x = cutoff+2, y = .101*max(df$yv_null), alpha = alpha), 
                 mapping = aes(label = paste("alpha ==",alpha), x=x, y=y),
-                parse=TRUE, size = 6) + 
+                parse=TRUE, size = 3) + 
       geom_text(data=data.frame( x = cutoff-2, y = .1*max(df$yv_null), Beta = Beta), 
                 mapping = aes(label = paste("beta ==",Beta), x=x, y=y),
-                parse=TRUE, size = 6) +
+                parse=TRUE, size = 3) +
       geom_text(data=data.frame( x = max(meanh1,cutoff+3), y = .5*max(df$yv_null), power=power), 
                 mapping = aes(label = paste("power ==",round(power,2)), x=x, y=y),
-                parse=TRUE, size = 6) + 
+                parse=TRUE, size = 3) + 
       geom_text(data=data.frame( x = meanh0, y = max(df$yv_null)+.01),
-                mapping = aes(label = "H[0]", x=x, y=y), parse=TRUE, size = 8) + 
+                mapping = aes(label = "H[0]", x=x, y=y), parse=TRUE, size = 4) + 
       geom_text(data=data.frame( x = meanh1, y = max(df$yv_alt)+.01),
-                mapping = aes(label = "H[1]", x=x, y=y), parse=TRUE, size = 8) + 
+                mapping = aes(label = "H[1]", x=x, y=y), parse=TRUE, size = 4) + 
       scale_x_continuous("Numeric Dependent Variable Values", limits = c(80,120)) + 
       scale_y_continuous("Normal Distribution") +
       ggtitle("Power as a function of effect size") + theme_bw() +
-      theme(plot.title = element_text(size=18),
-            panel.grid.major = element_blank())
+      theme(plot.title = element_text(size=10),
+            panel.grid.major = element_blank(),
+            axis.title.y = element_text(size=8),
+            axis.title.x = element_text(size=8),
+            plot.margin = unit(c(0,.25,.25,.25),units="lines"))
     print(p1)
     
   }	

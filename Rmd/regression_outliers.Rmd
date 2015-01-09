@@ -6,10 +6,10 @@ output:
       in_header: depends/sci-includes.html
 ---
 
-```{r load_stuff,include=FALSE}
-  library(knitr)
-  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE)
-  opts_knit$set(animation.fun=hook_scianimator)
+```{r load_stuff, include=FALSE}
+      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=5.5,fig.height=2.8)
+      ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
+                  ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))
   source(file.path('..','src','regression_outliers.R'))  
 ```
 

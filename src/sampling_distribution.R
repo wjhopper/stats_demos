@@ -1,9 +1,7 @@
-sampling_distribution <- function(samps = 1000, n = 50, rate = .03) { 
+sampling_distribution <- function(samps = 10, n = 50, rate = .03) { 
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
   library(dplyr)
-  library(ggplot2)
-  library(gridExtra)
-  library(animation)
+
   oopt = ani.options(interval = .25, nmax = samps)
   
   mu <- 1/rate
@@ -23,21 +21,34 @@ sampling_distribution <- function(samps = 1000, n = 50, rate = .03) {
   for (N in 2:ani.options("nmax")) {
     p1 <- ggplot(select(samples, N),aes_string(x = paste('V',N,sep=''))) + 
       geom_histogram(aes(y=..density..),fill="white",color="red",binwidth=5) + 
-      stat_function(fun = dexp, args = list(rate=rate),size = 1.5) + 
-      scale_y_continuous(limits=c(0,.045)) + scale_x_continuous(limits=c(0,max(samples))) +
-      ggtitle("Sample Distribution") +  xlab(paste("Sample #", N,sep='')) + theme_bw()
+      stat_function(fun = dexp, args = list(rate=rate)) + 
+      scale_y_continuous(limits=c(0,.045)) + 
+      scale_x_continuous(limits=c(0,max(samples))) +
+      ggtitle("Sample Distribution") +  
+      xlab(paste("Sample #", N,sep='')) + 
+      theme_bw() +
+      theme(plot.title = element_text(size=10),
+            panel.grid.major = element_blank(),
+            axis.title.y = element_text(size=8),
+            axis.title.x = element_text(size=8),
+            plot.margin = unit(c(0,.25,.25,.25),units="lines"))
     
     p2 <- ggplot(data = data.frame(avg=means$avg[1:N]),mapping=aes(x=avg)) +
       geom_histogram(binwidth=.5,fill="#999999") + 
-      geom_text(mapping = aes(label = paste("Number of samples drawn = ", as.character(N)),
+      geom_text(mapping = aes(label = paste("Number of samples drawn = ", N),
                               x= mu ,y=ymax_counts + 2.5), 
                 data = data.frame(mu = mu, ymax_counts = ymax_counts,N = N ),
-                size = 8, color = "red") +
+                size = 2.5, color = "red") +
       scale_y_continuous(limits=c(0,ymax_counts+5))  +
       scale_x_continuous("Sample Mean Value",limits=c(min(means$avg)-3,max(means$avg)+3)) +
       ggtitle("Distibution of Means from All Samples") + 
-      theme_bw()
-      
+      theme_bw() + 
+      theme(plot.title = element_text(size=10),
+            panel.grid.major = element_blank(),
+            axis.title.y = element_text(size=8),
+            axis.title.x = element_text(size=8),
+            plot.margin = unit(c(0,.25,.25,.25),units="lines"))
+          
       # figure out x axis location of newest point!
       new_data <- ggplot_build(p2)$data[[1]]
       if (N >2) {
@@ -54,23 +65,23 @@ sampling_distribution <- function(samps = 1000, n = 50, rate = .03) {
       d_est <- data.frame(density(means$avg[1:N], adjust=2)[c(1,2)])
       d_est$y <- ((d_est$y*N)*.5) #.5 is binwidth in histogram
       p2 <- p2 + geom_line(data = d_est, mapping = aes(x=x,y=y),
-                           color="darkgreen",size =1.5,linetype = 2 )
+                           color="darkgreen",linetype = 2 )
       grid.arrange(p1,p2,nrow=1,ncol=2)
       old_data <- new_data
   }
   d_est <- data.frame(density(means$avg, adjust=2)[c(1,2)])
   p3 <- ggplot(data = means) +
     geom_histogram(aes(x=avg,y = ..density..),binwidth=.5,fill="#999999") + 
-    stat_function(fun=dnorm, args = list(mean=mu,sd=sigma/sqrt(n)), size = 2, color='red') + 
-    geom_text(aes(label = paste("Number of means = ", as.character(N)), 
+    stat_function(fun=dnorm, args = list(mean=mu,sd=sigma/sqrt(n)), color='red') + 
+    geom_text(aes(label = paste("Number of samples drawn = ", N), 
                   x=mu,y=ymax_freq+.0075), 
               data = data.frame(mu = mu, ymax_freq=ymax_freq,N = N ),
-              size = 8, color = "red") +
+              size = 2.5, color = "red") +
     geom_line(data = d_est, mapping = aes(x=x,y=y),
-              color="darkgreen",size =1.5,linetype = 2 ) + 
+              color="darkgreen",linetype = 2 ) + 
     scale_y_continuous(limits=c(0,ymax_freq+.01)) + 
     scale_x_continuous("Sample Mean Value",limits=c(min(means$avg)-3,max(means$avg)+3)) +
-    ggtitle("Distibution of Means from All Samples") + 
+    ggtitle("Distribution of Means from All Samples") + 
     theme_bw()
   print(p3)
 

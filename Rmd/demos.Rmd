@@ -8,7 +8,7 @@ output:
 ---
 ***
 
-```{r load_stuff, verbose=F,warning=FALSE,message=FALSE,echo=FALSE}
+```{r load_stuff}
   library(pander)
   table <- data.frame(title = c("Power and Alpha Level", "Power and Effect Size", "Power and Sample Size",
                               "Power and Sample Standard Deviation", "Regression and Outliers",
@@ -20,7 +20,7 @@ output:
   titles <- table[table$file == files,'title']
 ```
 
-```{r generate_titles, verbose=F,warning=FALSE,message=FALSE,echo=FALSE, results='asis'}
+```{r generate_titles,  results='asis'}
   for (i in 1:length(titles)) { 
     pandoc.header(pandoc.link.return(url =paste(files[i],'.html',sep=''),text = titles[i]),level=2)
   }

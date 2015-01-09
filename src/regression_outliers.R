@@ -1,6 +1,5 @@
-regression_outliers <- function(n = 35, range=c(70,130), interval = .75, frames =20) { 
-  library(ggplot2)
-  library(gridExtra)
+regression_outliers <- function(n = 20, range=c(70,130), interval = .75, frames =20) { 
+
   ani.options(interval = interval, nmax = frames + 1)
   offset = 1 
   n = round(n)

@@ -1,6 +1,4 @@
 html_document:
-  fig_width: 12
-  fig_height: 6
   lib_dir: ../html_output/assets	
   theme: cerulean
   self_contained: false

@@ -7,14 +7,12 @@ output:
 ---
 
 ```{r load_stuff,include=FALSE}
-  library(knitr)
-  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE)
-  opts_knit$set(animation.fun=hook_scianimator)
+      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=5.5,fig.height=2.8)
+      ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
+                  ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))
   source(file.path('..','src','power_n.R'))  
 ```
 
 ```{r animation,fig.show='animate', aniopts=('controls')}
-# fig.width=10, fig.height=6,  
-# ani.width = 800, ani.height=500
   power_n()
 ```

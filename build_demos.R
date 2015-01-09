@@ -1,4 +1,5 @@
 build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
+  library(animation)
   
   files <- list.files(path = "src",pattern="*.R",full.names=TRUE)
   if (identical(files, character(0))) {
@@ -13,8 +14,6 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
 
   
   if (anim_only) {
-        
-    library(animation)
     files <- as.list(files)
     names(files) <- bnames
     fun_list <- lapply(files,source)
@@ -31,6 +30,11 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
     }
   } else {
       library(rmarkdown)
+      library(knitr)
+      library(ggplot2)
+      library(gridExtra)
+      
+      opts_knit$set(animation.fun=hook_scianimator)
       start_dir = getwd()
       if (file.exists(html_dir)) {
         unlink(html_dir, recursive=TRUE)
@@ -40,11 +44,14 @@ build_demos <- function(docs="all",anim_only = FALSE, anim_dir = "anim_output", 
       rmd_files <- sub('src','Rmd',rmd_files)
       
       for (i in rmd_files) {
-        render(i,output_dir = file.path('..',html_dir))
+        render(i,output_dir = file.path('..',html_dir),envir = environment())
       }
+      
       setwd(start_dir)
       file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
       file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      
-      render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),intermediates_dir = file.path('..',html_dir) )
+      render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),
+             intermediates_dir = file.path('..',html_dir),
+             envir = parent.env(environment()) )
   }
 }

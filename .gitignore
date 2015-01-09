@@ -3,3 +3,4 @@ anim_output/
 *.Rhistory
 *.Rdata
 *~*
+*.orig
