@@ -1,4 +1,4 @@
-sampling_distribution <- function(samps = 10, n = 50, rate = .03) { 
+sampling_distribution <- function(samps = NULL, n = NULL, rate = NULL,interval =.25) { 
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
   library(dplyr)
 

@@ -1,4 +1,4 @@
-regression_outliers <- function(n = 20, range=c(70,130), interval = .75, frames =20) { 
+regression_outliers <- function(n = NULL, range=NULL, interval = .75, frames =20) { 
 
   ani.options(interval = interval, nmax = frames + 1)
   offset = 1 
