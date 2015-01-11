@@ -4,7 +4,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     se <- sdh0/sqrt(N)
     meanh1 <- meanh0+effect
     cutoff = qnorm(1-alpha,meanh0,se)
-    power <- (power.t.test(n=N,delta = effect, sd = sdh0, sig.level = alpha, 
+    power <- (power.t.test(n=N,delta = effect, sd = sdh0, sig.level = alpha, power= NULL, 
                            type = "one.sample", alternative = "one.sided")$power)
     Beta <- round((1-power),2)
     
@@ -29,10 +29,10 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
       geom_polygon(data = data.frame(x = c(cutoff, df[df$xv >= cutoff,'xv'], max(df$xv)),
                                      y = c(0, df[df$xv >= cutoff,'yv_null'], 0)),
                    aes(x=x,y=y), fill='red',color='black',alpha=.6) + 
-      geom_text(data=data.frame( x = cutoff+2, y = .101*max(df$yv_null), alpha = alpha), 
+      geom_text(data=data.frame( x = cutoff+max(((2/3)*se),.5), y = .101*max(df$yv_null), alpha = alpha), 
                 mapping = aes(label = paste("alpha ==",alpha), x=x, y=y),
                 parse=TRUE, size = 3) + 
-      geom_text(data=data.frame( x = cutoff-2, y = .1*max(df$yv_null), Beta = Beta), 
+      geom_text(data=data.frame( x = cutoff-max(((2/3)*se),.5), y = .1*max(df$yv_null), Beta = Beta), 
                 mapping = aes(label = paste("beta ==",Beta), x=x, y=y),
                 parse=TRUE, size = 3) +
       geom_text(data=data.frame( x = max(meanh0,cutoff+3), y = .5*max(df$yv_null), power=power), 
@@ -42,8 +42,8 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
                 mapping = aes(label = "H[0]", x=x, y=y), parse=TRUE, size = 4) + 
       geom_text(data=data.frame( x = meanh1, y = max(df$yv_alt)+.01),
                 mapping = aes(label = "H[1]", x=x, y=y), parse=TRUE, size = 4) + 
-      scale_x_continuous("Numeric Dependent Variable Values") + 
-      scale_y_continuous("Normal Distribution") +
+      scale_x_continuous("Numeric Dependent Variable Values", limits = c(min(df$xv), max(df$xv))) + 
+      scale_y_continuous("Normal Distribution",limits=c(0,dnorm(meanh0,meanh0,se)+.03))  +
       ggtitle("Power as a function of alpha level") + theme_bw() +
       theme(plot.title = element_text(size=10),
             panel.grid.major = element_blank(),
@@ -72,16 +72,17 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
       draw_plot() 
     } 
   } else if (is.null(sdh0))  { 
-    sd <- seq(15,1,length.out=frames)
-    var_int <- sd
-  
+    for (sdh0 in seq(15,1,length.out=frames)) {
+      draw_plot() 
+    }
   } else if (is.null(effect)) { 
-    effect <- seq(1,frames,by=1)
-    var_int <- effect
-
+    for (effect in seq(1,frames,by=1)) {
+      draw_plot() 
+    }
   } else if (is.null(alpha)) { 
-    alpha = seq(.2,.01, by=-.2/frames)
-    var_int <- alpha
+    for ( alpha in seq(.2,.01, by=-.2/frames)) {
+      draw_plot() 
+    }
   } else { 
     stop("internal error herp")
   }

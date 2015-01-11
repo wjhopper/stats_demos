@@ -13,9 +13,9 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
   args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = 2.5, frames = 10),
        power_effect = list(meanh0 = 100, sdh0 = 15, alpha=.05,  N =25, interval=2.5, frames = 10),
        power_n = list(meanh0 = 100, sdh0 = 15, effect = 3,  alpha=.05 , interval=2.5, frames = 30),
-       power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 30),
+       power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 15),
        regression_outliers = list(n = 20, range=c(70,130), interval = .75, frames =20),
-       sampling_Distribution = list(samps = 10, n = 50, rate = .03)
+       sampling_distribution = list(samps = 10, n = 50, rate = .03)
       )
   # prune table based on input args
   fun_table <- fun_table[docs]
@@ -29,14 +29,14 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
 
   if (anim_only) {    
     dir.create(anim_dir, mode = "0775")
+    setwd("anim_output")
     for (i in 1:length(fun_table)) {
-      setwd("anim_output")
       saveHTML({do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)}, img.name = fun_table[[i]]$name, 
-               imgdir =  "img",  htmlfile = paste(fun_table[[i]]$name,".html", sep=''),
+               imgdir =  "img",  htmlfile = paste(names(fun_table[i]),".html", sep=''),
                autobrowse = FALSE, verbose=FALSE, autoplay =FALSE, navigator = FALSE,
-               title = fun_table[[i]]$name,ani.width = 900, ani.height=500)
-      setwd(start_dir)
+               title = names(fun_table[i]),ani.width = 900, ani.height=500)
     }
+    setwd(start_dir)
   } else {
       library(rmarkdown)
       library(knitr)
