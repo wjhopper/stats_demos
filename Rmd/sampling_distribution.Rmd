@@ -16,4 +16,4 @@ output:
 ```{r animation,fig.show='animate', aniopts=('controls')}
   do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)
 ```
-
+#### [Home](./demos.html) {#home}

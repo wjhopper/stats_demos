@@ -8,6 +8,11 @@ div.main-container {
   padding: 0px
 }
 
+#home h4 { 
+  margin: auto;
+  text-align: center;
+  padding-bottom: 5px;
+}
 
 div.scianimator img {
   height: 100% !important;
