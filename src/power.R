@@ -1,9 +1,6 @@
 power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL, interval = 2.5, frames = 10) {
 
-  draw_plot <- function() { 
-    se <- sdh0/sqrt(N)
-    meanh1 <- meanh0+effect
-    cutoff = qnorm(1-alpha,meanh0,se)
+  draw_plot <- function(x_range=NULL,y_range=NULL) { 
     power <- (power.t.test(n=N,delta = effect, sd = sdh0, sig.level = alpha, power= NULL, 
                            type = "one.sample", alternative = "one.sided")$power)
     Beta <- round((1-power),2)
@@ -29,10 +26,10 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
       geom_polygon(data = data.frame(x = c(cutoff, df[df$xv >= cutoff,'xv'], max(df$xv)),
                                      y = c(0, df[df$xv >= cutoff,'yv_null'], 0)),
                    aes(x=x,y=y), fill='red',color='black',alpha=.6) + 
-      geom_text(data=data.frame( x = cutoff+max(((2/3)*se),.5), y = .101*max(df$yv_null), alpha = alpha), 
+      geom_text(data=data.frame( x = cutoff+max(((2/3)*se),1.5), y = -.0225, alpha = alpha), 
                 mapping = aes(label = paste("alpha ==",alpha), x=x, y=y),
                 parse=TRUE, size = 3) + 
-      geom_text(data=data.frame( x = cutoff-max(((2/3)*se),.5), y = .1*max(df$yv_null), Beta = Beta), 
+      geom_text(data=data.frame( x = cutoff-max(((2/3)*se),1.5), y = -.0225, Beta = Beta), 
                 mapping = aes(label = paste("beta ==",Beta), x=x, y=y),
                 parse=TRUE, size = 3) +
       geom_text(data=data.frame( x = max(meanh0,cutoff+3), y = .5*max(df$yv_null), power=power), 
@@ -42,9 +39,11 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
                 mapping = aes(label = "H[0]", x=x, y=y), parse=TRUE, size = 4) + 
       geom_text(data=data.frame( x = meanh1, y = max(df$yv_alt)+.01),
                 mapping = aes(label = "H[1]", x=x, y=y), parse=TRUE, size = 4) + 
-      scale_x_continuous("Numeric Dependent Variable Values", limits = c(min(df$xv), max(df$xv))) + 
-      scale_y_continuous("Normal Distribution",limits=c(0,dnorm(meanh0,meanh0,se)+.03))  +
-      ggtitle("Power as a function of alpha level") + theme_bw() +
+      scale_x_continuous("Numeric Dependent Variable Values", limits = x_range) + 
+      scale_y_continuous("Normal Distribution",limits=c(y_range[1],y_range[2]+.03))  +
+      ggtitle(sprintf("Effect Size = %1.0f, Sample SD = %1.2f, Sample Size = %1.0f, Alpha Level = %0.2f", 
+                      round(effect,2), round(sdh0,2), round(N,2),round(alpha,2))) +
+      theme_bw() +
       theme(plot.title = element_text(size=10),
             panel.grid.major = element_blank(),
             axis.title.y = element_text(size=8),
@@ -67,21 +66,45 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
   ani.options(interval = interval, nmax = frames)
   
   if (is.null(N)) {
-#     N <- seq(5,frames,by = 5)
-    for (N in seq(5,frames,by = 5)) {
-      draw_plot() 
+
+    meanh1 <- meanh0+effect
+    start_se <- sdh0/sqrt(5)
+    end_se <- sdh0/sqrt(frames*5)
+    for (N in seq(5,frames*5,by = 5)) {
+      se <- sdh0/sqrt(N)
+      cutoff = qnorm(1-alpha,meanh0,se)
+      draw_plot(x_range= c(meanh0 - 4*start_se,meanh1 + 4*start_se),
+                y_range = c(-.025, dnorm(meanh0, meanh0, end_se))) 
     } 
   } else if (is.null(sdh0))  { 
-    for (sdh0 in seq(15,1,length.out=frames)) {
-      draw_plot() 
+    
+    meanh1 <- meanh0+effect
+    start_se <- 15/sqrt(N)
+    end_se <- 3/sqrt(N)
+    for (sdh0 in seq(15,3,length.out=frames)) {
+      se <- sdh0/sqrt(N)
+      cutoff = qnorm(1-alpha,meanh0,se)
+      draw_plot(x_range= c(meanh0 - 4*start_se,meanh1 + 4*start_se),
+                y_range = c(-.025, dnorm(meanh0, meanh0, end_se)) )
     }
   } else if (is.null(effect)) { 
+    
+    se <- sdh0/sqrt(N)
+    cutoff = qnorm(1-alpha,meanh0,se)
+    max_meanh1 <- meanh0+frames
     for (effect in seq(1,frames,by=1)) {
-      draw_plot() 
+      meanh1 <- meanh0+effect
+      draw_plot(x_range= c(meanh0 - 4*se,max_meanh1 + 4*se),
+                y_range = c(-.025, dnorm(meanh0, meanh0,se)))
     }
   } else if (is.null(alpha)) { 
+    
+    se <- sdh0/sqrt(N)
+    meanh1 <- meanh0+effect
     for ( alpha in seq(.2,.01, by=-.2/frames)) {
-      draw_plot() 
+      cutoff = qnorm(1-alpha,meanh0,se)
+      draw_plot(x_range= c(meanh0 - 4*se,meanh1 + 4*se),
+                y_range = c(-.025, dnorm(meanh0, meanh0,se)) )
     }
   } else { 
     stop("internal error herp")
