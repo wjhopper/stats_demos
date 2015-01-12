@@ -8,8 +8,9 @@ output:
 ---
 ***
 
-```{r load_stuff}
+```{r load_stuff, include=FALSE}
   library(pander)
+  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE)
   table <- data.frame(title = c("Power and Alpha Level", "Power and Effect Size", "Power and Sample Size",
                               "Power and Sample Standard Deviation", "Regression and Outliers",
                               "Sampling Distributions"),

@@ -31,7 +31,7 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
     dir.create(anim_dir, mode = "0775")
     setwd("anim_output")
     for (i in 1:length(fun_table)) {
-      saveHTML({do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)}, img.name = fun_table[[i]]$name, 
+      saveHTML({do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)}, img.name = names(fun_table[i]), 
                imgdir =  "img",  htmlfile = paste(names(fun_table[i]),".html", sep=''),
                autobrowse = FALSE, verbose=FALSE, autoplay =FALSE, navigator = FALSE,
                title = names(fun_table[i]),ani.width = 900, ani.height=500)
@@ -41,20 +41,18 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
       library(rmarkdown)
       library(knitr)
 
-      
       opts_knit$set(animation.fun=hook_scianimator)
       start_dir = getwd()
       if (file.exists(html_dir)) {
         unlink(html_dir, recursive=TRUE)
       }
       dir.create(html_dir)
-      rmd_files <- sub('.R','.Rmd', files)
-      rmd_files <- sub('src','Rmd',rmd_files)
       
-      for (i in rmd_files) {
-        render(i,output_dir = file.path('..',html_dir),envir = environment())
+      for (i in 1:length(fun_table)) {
+        render(file.path("Rmd",paste(names(fun_table[i]),".Rmd",sep="")),
+               output_dir = file.path('..',html_dir),
+               envir = environment())
       }
-      
       setwd(start_dir)
       file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
       file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      

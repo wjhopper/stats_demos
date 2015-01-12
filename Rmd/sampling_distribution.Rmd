@@ -10,10 +10,10 @@ output:
       opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=6,fig.height=3)
       ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
                   ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))
-  source(file.path('..','src','sampling_distribution.R'))  
+#   source(file.path('..','src','sampling_distribution.R'))  
 ```
 
 ```{r animation,fig.show='animate', aniopts=('controls')}
-  sampling_distribution()
+  do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)
 ```
 
