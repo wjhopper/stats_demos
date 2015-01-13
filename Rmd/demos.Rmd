@@ -3,26 +3,22 @@ title: "Statistics Demonstrations"
 output:
   html_document:
     theme: united
-    css: assets/demos.css  
+    css: depends/demos.css  
     self_contained: true
 ---
 ***
 
 ```{r load_stuff, include=FALSE}
   library(pander)
-  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE)
-  table <- data.frame(title = c("Power and Alpha Level", "Power and Effect Size", "Power and Sample Size",
-                              "Power and Sample Standard Deviation", "Regression and Outliers",
-                              "Sampling Distributions"),
-                      file = c("power_alpha", "power_effect", "power_n", "power_sd", "regression_outliers",
-                              "sampling_distribution"))
-  files <- list.files(path = file.path("..","html_output"),pattern="*.html")
+  opts_chunk$set(verbose=F,warning=FALSE,message=FALSE)
+  files <- list.files(path = file.path('..',html_dir),pattern="*.html")
   files <- sub('.html', '', files)
-  titles <- table[table$file == files,'title']
+  files <- files[files != "demos"]
 ```
 
 ```{r generate_titles,  results='asis'}
-  for (i in 1:length(titles)) { 
-    pandoc.header(pandoc.link.return(url =paste(files[i],'.html',sep=''),text = titles[i]),level=2)
-  }
+  for (f in files) { 
+    pandoc.header(pandoc.link.return(url =paste(names(fun_table_big[f]),'.html',sep=''),
+                                     text = fun_table_big[[f]]$title),level=2)
+    }
 ```

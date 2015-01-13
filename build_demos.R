@@ -11,9 +11,12 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
   }
   
   # function table to look up right function call for demo
-  fun_table <- list(power_alpha = list(name="power"),power_n = list(name="power"), power_sd=list(name = "power"),
-                    power_effect= list(name="power"), regression_outliers =list(name="regression_outliers"),
-                    sampling_distribution = list(name="sampling_distribution"))
+  fun_table_big <- list(power_alpha = list(name="power", title = "Power and Alpha Level"),
+                    power_n = list(name="power", title = "Power and Effect Size"), 
+                    power_sd=list(name = "power", title = "Power and Sample Standard Deviation"),
+                    power_effect= list(name="power", title = "Power and Effect Size"),
+                    regression_outliers =list(name="regression_outliers", title = "Regression and Outliers"),
+                    sampling_distribution = list(name="sampling_distribution", title = "Sampling Distributions"))
 
   args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = 2.5, frames = 10),
        power_effect = list(meanh0 = 100, sdh0 = 15, alpha=.05,  N =25, interval=2.5, frames = 10),
@@ -23,7 +26,7 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
        sampling_distribution = list(samps = 30, n = 50, rate = .03, interval = .1,frames =30 )
       )
   # prune table based on input args
-  fun_table <- fun_table[docs]
+  fun_table <- fun_table_big[docs]
 
   for (i in 1:length(fun_table)) { 
     # add the file path and arguments on there 
@@ -44,20 +47,23 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
       library(rmarkdown)
       library(knitr)
       opts_knit$set(animation.fun=hook_scianimator)
-      
-      if (file.exists(html_dir)) {
-        unlink(html_dir, recursive=TRUE)
+
+      if (file.exists(file.path(html_dir,paste(names(fun_table[i]),"_files",sep='')))) {
+        unlink(file.path(html_dir,paste(names(fun_table[i]),"_files",sep=''), recursive=TRUE))
+        file.remove(file.path(html_dir,paste(names(fun_table[i]),".html",sep='')))
       }
-      dir.create(html_dir)
       render(file.path("Rmd",paste(names(fun_table[i]),".Rmd",sep="")),
                output_dir = file.path('..',html_dir),
                envir = environment())
       setwd(start_dir)
+    }
   }
-      file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
-      file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      
-      render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),
-             intermediates_dir = file.path('..',html_dir),
-             envir = parent.env(environment()) )
+  
+  if (!anim_only) {
+  file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
+  file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      
+  render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),
+         intermediates_dir = file.path("..",html_dir),
+         envir = environment())
   }
 }
