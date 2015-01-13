@@ -6,7 +6,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     Beta <- round((1-power),2)
     
     # We create a vector of x values over the range of values, stick in data frame
-    df <- data.frame(xv = seq(meanh0 - 4*se, meanh1 + 4*se, 0.01))
+    df <- data.frame(xv = seq(meanh0 - 3.5*se, meanh1 + 3.5*se, 0.01))
     df$yv_null <-dnorm(df$xv,meanh0,se)
     df$yv_alt <-dnorm(df$xv,meanh1,se)
     
@@ -26,10 +26,10 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
       geom_polygon(data = data.frame(x = c(cutoff, df[df$xv >= cutoff,'xv'], max(df$xv)),
                                      y = c(0, df[df$xv >= cutoff,'yv_null'], 0)),
                    aes(x=x,y=y), fill='red',color='black',alpha=.6) + 
-      geom_text(data=data.frame( x = cutoff+max(((2/3)*se),1.5), y = -.0225, alpha = alpha), 
+      geom_text(data=data.frame( x = cutoff+max(((2/3)*se),3), y = -.0225, alpha = alpha), 
                 mapping = aes(label = paste("alpha ==",alpha), x=x, y=y),
                 parse=TRUE, size = 3) + 
-      geom_text(data=data.frame( x = cutoff-max(((2/3)*se),1.5), y = -.0225, Beta = Beta), 
+      geom_text(data=data.frame( x = cutoff-max(((2/3)*se),3), y = -.0225, Beta = Beta), 
                 mapping = aes(label = paste("beta ==",Beta), x=x, y=y),
                 parse=TRUE, size = 3) +
       geom_text(data=data.frame( x = max(meanh0,cutoff+3), y = .5*max(df$yv_null), power=power), 
@@ -73,7 +73,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     for (N in seq(5,frames*5,by = 5)) {
       se <- sdh0/sqrt(N)
       cutoff = qnorm(1-alpha,meanh0,se)
-      draw_plot(x_range= c(meanh0 - 4*start_se,meanh1 + 4*start_se),
+      draw_plot(x_range= c(meanh0 - 3.5*start_se,meanh1 + 3.5*start_se),
                 y_range = c(-.025, dnorm(meanh0, meanh0, end_se))) 
     } 
   } else if (is.null(sdh0))  { 
@@ -84,7 +84,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     for (sdh0 in seq(15,3,length.out=frames)) {
       se <- sdh0/sqrt(N)
       cutoff = qnorm(1-alpha,meanh0,se)
-      draw_plot(x_range= c(meanh0 - 4*start_se,meanh1 + 4*start_se),
+      draw_plot(x_range= c(meanh0 - 3.5*start_se,meanh1 + 3.5*start_se),
                 y_range = c(-.025, dnorm(meanh0, meanh0, end_se)) )
     }
   } else if (is.null(effect)) { 
@@ -94,7 +94,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     max_meanh1 <- meanh0+frames
     for (effect in seq(1,frames,by=1)) {
       meanh1 <- meanh0+effect
-      draw_plot(x_range= c(meanh0 - 4*se,max_meanh1 + 4*se),
+      draw_plot(x_range= c(meanh0 - 3.5*se,max_meanh1 + 3.5*se),
                 y_range = c(-.025, dnorm(meanh0, meanh0,se)))
     }
   } else if (is.null(alpha)) { 
@@ -103,7 +103,7 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     meanh1 <- meanh0+effect
     for ( alpha in seq(.2,.01, by=-.2/frames)) {
       cutoff = qnorm(1-alpha,meanh0,se)
-      draw_plot(x_range= c(meanh0 - 4*se,meanh1 + 4*se),
+      draw_plot(x_range= c(meanh0 - 3.5*se,meanh1 + 3.5*se),
                 y_range = c(-.025, dnorm(meanh0, meanh0,se)) )
     }
   } else { 
