@@ -23,7 +23,7 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
        power_n = list(meanh0 = 100, sdh0 = 15, effect = 3,  alpha=.05 , interval=2.5, frames = 30),
        power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 15),
        regression_outliers = list(n = 20, range=c(70,130), interval = 1, frames =20),
-       sampling_distribution = list(samps = 30, n = 50, rate = .03, interval = .1,frames =30 )
+       sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000)
       )
   # prune table based on input args
   fun_table <- fun_table_big[docs]
@@ -60,8 +60,12 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
   }
   
   if (!anim_only) {
-  file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"))
-  file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"))      
+  file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"),overwrite=T)
+  file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"),overwrite=T)      
+  file.copy(file.path("Rmd","depends","scianimator.css"),file.path(html_dir, "assets","scianimator.css"),overwrite=T)
+  file.copy(file.path("Rmd","depends","scianimator.light.css"),file.path(html_dir, "assets","scianimator.light.css"),overwrite=T)
+  file.copy(file.path("Rmd","depends","jquery-1.4.4.min.js"),file.path(html_dir, "assets","jquery-1.4.4.min.js"),overwrite=T)
+  file.copy(file.path("Rmd","depends","jquery.scianimator.js"),file.path(html_dir, "assets","jquery.scianimator.js"),overwrite=T)
   render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),
          intermediates_dir = file.path("..",html_dir),
          envir = environment())

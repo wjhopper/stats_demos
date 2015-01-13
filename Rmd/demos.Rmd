@@ -3,7 +3,7 @@ title: "Statistics Demonstrations"
 output:
   html_document:
     theme: united
-    css: depends/demos.css  
+    css: assets/demos.css  
     self_contained: true
 ---
 ***
