@@ -4,3 +4,6 @@ anim_output/
 *.Rdata
 *~*
 *.orig
+so-questions.txt
+test/
+

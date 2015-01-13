@@ -1,6 +1,5 @@
 regression_outliers <- function(n = NULL, range=NULL, interval = .75, frames =20) { 
 
-  ani.options(interval = interval, nmax = frames + 1)
   offset = 1 
   n = round(n)
   

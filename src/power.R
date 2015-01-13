@@ -62,9 +62,6 @@ power<- function(meanh0 = 100, effect =NULL, N = NULL, sdh0 = NULL, alpha = NULL
     stop("'sig.level' must be numeric in [0, 1]")
   }
   
-  opts <- ani.options()
-  ani.options(interval = interval, nmax = frames)
-  
   if (is.null(N)) {
 
     meanh1 <- meanh0+effect

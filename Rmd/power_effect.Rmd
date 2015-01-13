@@ -7,13 +7,13 @@ output:
 ---
 
 ```{r load_stuff,include=FALSE}
-      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=5.5,fig.height=2.8)
+      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=6,fig.height=3,
+                     interval = ani.options('interval'))
       ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
                   ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))
-#   source(file.path('..','src','power_effect.R'))  
 ```
 
-```{r animation,fig.show='animate', aniopts=('controls')}
-  do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args)
+```{r animation,fig.show='animate',  aniopts=('controls')}
+  do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args[filt])
 ```
 #### [Home](./demos.html) {#home}

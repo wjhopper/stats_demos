@@ -1,8 +1,6 @@
-sampling_distribution <- function(samps = NULL, n = NULL, rate = NULL,interval =.25) { 
+sampling_distribution <- function(samps = NULL, n = NULL, rate = NULL,interval =1) { 
 # The sampling distribution of the sample mean for scores sampled from an exponential distribution as the number of samples increases
   library(dplyr)
-
-  oopt = ani.options(interval = .25, nmax = samps)
   
   mu <- 1/rate
   sigma <- 1/rate
@@ -19,6 +17,8 @@ sampling_distribution <- function(samps = NULL, n = NULL, rate = NULL,interval =
   ## use a loop to create images one by one
 
   for (N in 2:ani.options("nmax")) {
+    if (N <= 10) {ani.pause(2)}
+    if (N <= 0) {ani.pause(.5)}
     p1 <- ggplot(select(samples, N),aes_string(x = paste('V',N,sep=''))) + 
       geom_histogram(aes(y=..density..),fill="white",color="red",binwidth=5) + 
       stat_function(fun = dexp, args = list(rate=rate)) + 
