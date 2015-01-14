@@ -21,4 +21,7 @@ output:
     pandoc.header(pandoc.link.return(url =paste(names(fun_table_big[f]),'.html',sep=''),
                                      text = fun_table_big[[f]]$title),level=2)
     }
+  write("Animations are best viewed in webkit-based browser (Chrome, Qupzilla, Safari would likely work)  ", "")  
+
+  write("There are some issues with firefox and the javascript used to produce the animations"  , "" )
 ```

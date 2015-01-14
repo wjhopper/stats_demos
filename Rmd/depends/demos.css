@@ -3,8 +3,10 @@
   text-align: center;
 }
 
-.level2 h2 {
+.level2 h2,p {
   margin: auto;
   text-align: center;
   padding: 10px;
 }
+
+
