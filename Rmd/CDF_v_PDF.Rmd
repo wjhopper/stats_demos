@@ -7,7 +7,7 @@ output:
 ---
 
 ```{r load_stuff,include=FALSE}
-      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=6,fig.height=6,
+      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=5.5,fig.height=4.5,
                      interval = ani.options('interval'))
       ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
                   ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))

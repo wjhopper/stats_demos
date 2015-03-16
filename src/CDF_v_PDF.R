@@ -7,13 +7,19 @@ CDF_v_PDF <- function(interval =1) {
   CDF <- ggplot() + 
     scale_y_continuous('Cumulative Probability',limits=c(0,1)) + 
     scale_x_continuous(limits = c(-3,3),breaks = seq(-3,3,by =1)) + theme_bw() + 
-    ggtitle("Gaussian Cumulative Density Function (CDF")
-  
+    ggtitle("Gaussian Cumulative Density Function (CDF)") +
+    theme(legend.position="none",
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          plot.margin=unit(c(1,1,-.5,1), "cm"))
+#     )
   PDF <- ggplot(data = data.frame(x,y_dens), aes(x=x,y=y_dens)) + 
     geom_line() + 
     ylab('Normal Density') + 
     scale_x_continuous(limits = c(-3,3),breaks = seq(-3,3,by =1)) + theme_bw() +
-    ggtitle("Gaussian Probability Density Function (PDF)")
+    ggtitle("Gaussian Probability Density Function (PDF)") +
+    theme(plot.margin=unit(c(1,1,-.5,1), "cm"))
+
   for (N in 1:ani.options("nmax")) {
       df <- CDF_data[1:N,]
       CDF_2 <- CDF + 
