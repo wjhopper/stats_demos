@@ -3,7 +3,7 @@ title: "Statistics Demonstrations"
 output:
   html_document:
     theme: united
-    css: assets/demos.css  
+    css: depends/demos.css  
     self_contained: true
 ---
 ***
@@ -11,12 +11,12 @@ output:
 ```{r load_stuff, include=FALSE}
   library(pander)
   opts_chunk$set(verbose=F,warning=FALSE,message=FALSE)
-  files <- list.files(path = file.path('..',html_dir),pattern="*.html")
+  files <- list.files(pattern="*.html")
   files <- sub('.html', '', files)
   files <- files[files != "demos"]
 ```
 
-```{r generate_titles,  results='asis'}
+```{r generate_titles,  results='asis',echo=FALSE}
   for (f in files) { 
     pandoc.header(pandoc.link.return(url =paste(names(fun_table_big[f]),'.html',sep=''),
                                      text = fun_table_big[[f]]$title),level=2)

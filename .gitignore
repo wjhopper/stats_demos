@@ -3,7 +3,8 @@ anim_output/
 *.Rhistory
 *.Rdata
 *~*
-*.orig
-so-questions.txt
-test/
-
+Rmd/*.html
+Rmd/*_files/
+Rmd/depends/highlight/
+Rmd/depends/jquery-1.11.0/
+Rmd/depends/bootstrap*

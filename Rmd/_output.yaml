@@ -1,5 +1,5 @@
 html_document:
-  lib_dir: ../html_output/assets	
+  lib_dir: depends	
   theme: cerulean
   self_contained: false
-  css: assets/custom.css
+  css: depends/custom.css

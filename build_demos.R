@@ -1,5 +1,5 @@
 build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effect", "regression_outliers",
-                               "sampling_distribution"), param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
+                               "sampling_distribution","CDF_V_PDF"), param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
   library(animation)
   library(ggplot2)
   library(gridExtra)
@@ -16,14 +16,17 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
                     power_sd=list(name = "power", title = "Power and Sample Standard Deviation"),
                     power_effect= list(name="power", title = "Power and Effect Size"),
                     regression_outliers =list(name="regression_outliers", title = "Regression and Outliers"),
-                    sampling_distribution = list(name="sampling_distribution", title = "Sampling Distributions"))
+                    sampling_distribution = list(name="sampling_distribution", title = "Sampling Distributions"),
+                    CDF_v_PDF  = list(name="CDF_v_PDF", title = "Relationship between PDF and CDF")
+  )
 
   args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = 2.5, frames = 10),
        power_effect = list(meanh0 = 100, sdh0 = 15, alpha=.05,  N =25, interval=2.5, frames = 10),
        power_n = list(meanh0 = 100, sdh0 = 15, effect = 3,  alpha=.05 , interval=2.5, frames = 30),
        power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 15),
        regression_outliers = list(n = 20, range=c(70,130), interval = 1, frames =20),
-       sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000)
+       sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000),
+       CDF_v_PDF = list(interval = .15,frames = length(seq(-3,3,by=.025)))
       )
   # prune table based on input args
   fun_table <- fun_table_big[docs]
@@ -53,21 +56,31 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
         file.remove(file.path(html_dir,paste(names(fun_table[i]),".html",sep='')))
       }
       render(file.path("Rmd",paste(names(fun_table[i]),".Rmd",sep="")),
-               output_dir = file.path('..',html_dir),
-               envir = environment())
+             envir = environment())
       setwd(start_dir)
     }
   }
-  
+  render(file.path("Rmd",'demos.Rmd'), envir = environment())
+
   if (!anim_only) {
-  file.copy(file.path("Rmd","depends","custom.css"),file.path(html_dir, "assets","custom.css"),overwrite=T)
-  file.copy(file.path("Rmd","depends","demos.css"),file.path(html_dir, "assets","demos.css"),overwrite=T)      
-  file.copy(file.path("Rmd","depends","scianimator.css"),file.path(html_dir, "assets","scianimator.css"),overwrite=T)
-  file.copy(file.path("Rmd","depends","scianimator.light.css"),file.path(html_dir, "assets","scianimator.light.css"),overwrite=T)
-  file.copy(file.path("Rmd","depends","jquery-1.4.4.min.js"),file.path(html_dir, "assets","jquery-1.4.4.min.js"),overwrite=T)
-  file.copy(file.path("Rmd","depends","jquery.scianimator.js"),file.path(html_dir, "assets","jquery.scianimator.js"),overwrite=T)
-  render(file.path("Rmd",'demos.Rmd'),output_dir = file.path('..',html_dir),
-         intermediates_dir = file.path("..",html_dir),
-         envir = environment())
+      # get html files 
+      f <- list.files(path = "Rmd/", pattern="*.html",full.names = TRUE)
+      # get directories (images + css + js)
+      d<- list.dirs(path = "Rmd/", recursive=F)
+      
+      success <- file.copy(f, html_dir,recursive = T)
+      if (all(success)) {
+        file.remove(f)
+      } else {
+        stop(paste(f[!(success)], 'could not be copied to', html_dir))
+      }
+      success <- file.copy(d, html_dir, recursive = T)
+      if (all(success)) {
+        unlink(d[!grepl('depends',d,fixed=TRUE)], recursive=TRUE)
+#         file.remove(d[!grepl('depends',d,fixed=TRUE)])
+      } else {
+        stop(paste(d[!(success)], 'could not be copied to', html_dir))
+      }
   }
+
 }
