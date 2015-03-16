@@ -17,7 +17,9 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
                     power_effect= list(name="power", title = "Power and Effect Size"),
                     regression_outliers =list(name="regression_outliers", title = "Regression and Outliers"),
                     sampling_distribution = list(name="sampling_distribution", title = "Sampling Distributions"),
-                    CDF_v_PDF  = list(name="CDF_v_PDF", title = "Relationship between PDF and CDF")
+                    CDF_v_PDF  = list(name="CDF_v_PDF", title = "Relationship between PDF and CDF"),
+                    confidence_conf = list(name="confidence", title = "Confidence Interval and desired Confidence Level"),
+                    confidence_n = list(name="confidence", title = "Confidence Interval and sample size")
   )
 
   args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = 2.5, frames = 10),
@@ -26,7 +28,9 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
        power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 15),
        regression_outliers = list(n = 20, range=c(70,130), interval = 1, frames =20),
        sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000),
-       CDF_v_PDF = list(interval = .15,frames = length(seq(-3,3,by=.025)))
+       CDF_v_PDF = list(interval = .15,frames = length(seq(-3,3,by=.025))),
+       confidence_conf = list(meanh0 = 100,  N = 100, s =15, replicants = 100, interval =.5, frames = 101),
+       confidence_n =list(meanh0 = 100,  conf=.95, s =15, replicants = 100, interval =.5, frames = 101)
       )
   # prune table based on input args
   fun_table <- fun_table_big[docs]
