@@ -1,0 +1,19 @@
+---
+title: "The effect of the sample size on the Confidence Interval"
+output:  
+  html_document:
+    includes:
+      in_header: depends/sci-includes.html
+---
+
+```{r load_stuff,include=FALSE}
+      opts_chunk$set(verbose=F,warning=FALSE,message=FALSE,echo=FALSE,dpi=96,fig.width=6,fig.height=5,
+                     interval = ani.options('interval'))
+      ani.options(ani.width = opts_chunk$get('fig.width')*opts_chunk$get('dpi'),
+                  ani.height = opts_chunk$get('fig.width')*opts_chunk$get('dpi'))
+```
+
+```{r animation,fig.show='animate',  aniopts=('controls')}
+  do.call(fun_table[[i]]$fun$value,fun_table[[i]]$args[filt])
+```
+#### [Home](./demos.html) {#home}
