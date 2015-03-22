@@ -1,5 +1,5 @@
 build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effect", "regression_outliers",
-                               "sampling_distribution","CDF_V_PDF"), param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
+                               "sampling_distribution","CDF_v_PDF"), param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
   library(animation)
   library(ggplot2)
   library(gridExtra)
@@ -22,10 +22,10 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
                     confidence_n = list(name="confidence", title = "Confidence Interval and sample size")
   )
 
-  args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = 2.5, frames = 10),
-       power_effect = list(meanh0 = 100, sdh0 = 15, alpha=.05,  N =25, interval=2.5, frames = 10),
-       power_n = list(meanh0 = 100, sdh0 = 15, effect = 3,  alpha=.05 , interval=2.5, frames = 30),
-       power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=2.5, frames = 15),
+  args_list <- list(power_alpha = list(meanh0 = 100, sdh0 = 15, effect =5, N = 25, interval = .5, frames = 20),
+       power_effect = list(meanh0 = 100, sdh0 = 15, alpha=.05,  N =25, interval=.5, frames = 20),
+       power_n = list(meanh0 = 100, sdh0 = 15, effect = 3,  alpha=.05 , interval=.5, frames = 30),
+       power_sd = list(meanh0 = 100, effect = 3,  alpha=.05 , N =25, interval=.5, frames = 15),
        regression_outliers = list(n = 20, range=c(70,130), interval = 1, frames =20),
        sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000),
        CDF_v_PDF = list(interval = .15,frames = length(seq(-3,3,by=.025))),
@@ -55,9 +55,9 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
       library(knitr)
       opts_knit$set(animation.fun=hook_scianimator)
 
-      if (file.exists(file.path(html_dir,paste(names(fun_table[i]),"_files",sep='')))) {
-        unlink(file.path(html_dir,paste(names(fun_table[i]),"_files",sep=''), recursive=TRUE))
-        file.remove(file.path(html_dir,paste(names(fun_table[i]),".html",sep='')))
+      if (file.exists(file.path('Rmd',paste(names(fun_table[i]),"_files",sep='')))) {
+        unlink(file.path('Rmd',paste(names(fun_table[i]),"_files",sep=''), recursive=TRUE))
+        file.remove(file.path('Rmd',paste(names(fun_table[i]),".html",sep='')))
       }
       render(file.path("Rmd",paste(names(fun_table[i]),".Rmd",sep="")),
              envir = environment())
@@ -71,7 +71,9 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
       f <- list.files(path = "Rmd/", pattern="*.html",full.names = TRUE)
       # get directories (images + css + js)
       d<- list.dirs(path = "Rmd/", recursive=F)
-      
+      # filter out ones that we haven't built on this round. Shouldn't be any, but just in case
+      f <- f[(f %in% docs)]
+      d <- d[(sub('files',d,'') %in% docs)]
       success <- file.copy(f, html_dir,recursive = T)
       if (all(success)) {
         file.remove(f)

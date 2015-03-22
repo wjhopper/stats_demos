@@ -1,5 +1,6 @@
 ---
 title: "Statistics Demonstrations"
+author: "Will Hopper"
 output:
   html_document:
     theme: united
@@ -12,8 +13,10 @@ output:
   library(pander)
   opts_chunk$set(verbose=F,warning=FALSE,message=FALSE)
   files <- list.files(pattern="*.html")
+  stale_files <-  list.files(file.path('..', html_dir), pattern="*.html")
+  files <- union(files, stale_files)
   files <- sub('.html', '', files)
-  files <- files[files != "demos"]
+  files <- sort(files[files != "demos"])
 ```
 
 ```{r generate_titles,  results='asis',echo=FALSE}
@@ -21,7 +24,7 @@ output:
     pandoc.header(pandoc.link.return(url =paste(names(fun_table_big[f]),'.html',sep=''),
                                      text = fun_table_big[[f]]$title),level=2)
     }
-  write("Animations are best viewed in webkit-based browser (Chrome, Qupzilla, Safari would likely work)  ", "")  
+  write("Animations are best viewed in webkit-based browser (e.g. Chrome, Qupzilla, Safari should work well)  ", "")  
 
-  write("There are some issues with firefox and the javascript used to produce the animations"  , "" )
+  write("There are some compatibility issues with Firefox and the javascript used to produce the animations. If the animations appear to 'flicker' or drop frames as they play, trying one of the above browsers may improve your experience"  , "" )
 ```
