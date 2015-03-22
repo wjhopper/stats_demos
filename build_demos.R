@@ -1,5 +1,6 @@
 build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effect", "regression_outliers",
-                               "sampling_distribution","CDF_v_PDF"), param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
+                               "sampling_distribution","CDF_v_PDF","confidence_conf", "confidence_n"), 
+                        param_set=NULL, anim_only = FALSE, anim_dir = "anim_output", html_dir = "html_output") { 
   library(animation)
   library(ggplot2)
   library(gridExtra)
@@ -29,8 +30,8 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
        regression_outliers = list(n = 20, range=c(70,130), interval = 1, frames =20),
        sampling_distribution = list(samps = 1000, n = 50, rate = .03, interval = .1,frames =1000),
        CDF_v_PDF = list(interval = .15,frames = length(seq(-3,3,by=.025))),
-       confidence_conf = list(meanh0 = 100,  N = 100, s =15, replicants = 100, interval =.5, frames = 101),
-       confidence_n =list(meanh0 = 100,  conf=.95, s =15, replicants = 100, interval =.5, frames = 101)
+       confidence_conf = list(meanh0 = 100,  N = 100, s =15, replicants = 100, interval =.5, frames = 100),
+       confidence_n =list(meanh0 = 100,  conf=.95, s =15, replicants = 100, interval =.5, frames = 100)
       )
   # prune table based on input args
   fun_table <- fun_table_big[docs]
@@ -72,8 +73,8 @@ build_demos <- function(docs=c("power_alpha","power_n", "power_sd", "power_effec
       # get directories (images + css + js)
       d<- list.dirs(path = "Rmd/", recursive=F)
       # filter out ones that we haven't built on this round. Shouldn't be any, but just in case
-      f <- f[(f %in% docs)]
-      d <- d[(sub('files',d,'') %in% docs)]
+      f <- f[ f %in% paste('Rmd/',docs,'.html',sep='')]
+      d <- c(d[sub('_files','',basename(d)) %in% docs],'depends')
       success <- file.copy(f, html_dir,recursive = T)
       if (all(success)) {
         file.remove(f)
