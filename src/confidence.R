@@ -1,9 +1,12 @@
 confidence <- function(meanh0 = 100, N = NULL, s =NULL, conf= NULL, replicants = 100, interval =.5, frames = 100) {
   
   draw_plot <- function(df=NULL, wrap_var  = NULL, x_range=NULL,y_range=NULL) { 
-    # We create a vector of x values over the range of values, stick in data frame
-    for (i in 1:nrow(df)){
-      p1 <- ggplot(data =  df[1:i,], aes(x=sample_means, y = count)) + 
+    row_count <- nrow(df)
+    base <- seq(1,row_count, by=row_count/length(unique(df[,wrap_var])))
+    for ( i in 1:(row_count/length(unique(df[,wrap_var]))) ) {
+      tmprows = as.vector(sapply(base, 
+                                 function(x) seq(from=x, to = (replicants*which(base==x))-(replicants-i))))
+      p1 <- ggplot(data =  df[tmprows,], aes(x=sample_means, y = count)) + 
         geom_point(color = 'red',size=.5) +
         geom_segment(aes(x = lower, xend= upper, y=count,yend=count, color=caught)) +  
         facet_wrap(as.formula(paste("~", wrap_var)), ncol=3) +
