@@ -11,8 +11,9 @@ confidence <- function(meanh0 = 100, N = NULL, s =NULL, conf= NULL, replicants =
         geom_segment(aes(x = lower, xend= upper, y=count,yend=count, color=caught)) +  
         facet_wrap(as.formula(paste("~", wrap_var)), ncol=3) +
         scale_x_continuous("Sample Mean",expand = c(0, 0)) +
-        scale_y_continuous(expand = c(0, 5)) +
-        scale_color_manual("Mean in CI?",labels =c("out","In"),values = c("red","black")) +
+        scale_y_continuous(expand = c(0, 5), limits=c(0,100)) +
+        scale_color_manual("Mean in CI?",breaks=c(0,1), drop = FALSE,
+                           labels =c("Outside","Inside"),values = c("red","black")) +
         theme_bw() + 
         theme(strip.text = element_text(size=16)) +
         ggtitle(paste( as.character(conf*100),"% Confidence Intervals by Sample Size",sep=''))
